@@ -1,5 +1,5 @@
 a = float(input("¬ведите первое число:"))
 b = float(input("¬ведите второе число:"))
 print( a + b )
-print( a/b )
-
+print( a - b )
+print( a*b )
