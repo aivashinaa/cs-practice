@@ -1,8 +1,10 @@
 def parse_record(line):
     parts = line.split(";")
     if len(parts) != 3:
-        raise ValueError("Неверное количество полей")
-    city, temp_str, date = parts[0].strip(), parts[1].strip(), parts[2].strip()
+        raise ValueError("Строка должна содержать 3 поля")
+    city = parts[0].strip()
+    temp_str = parts[1].strip()
+    date = parts[2].strip()
 
     if not city or not date:
         raise ValueError("Город или дата пустые")
@@ -11,19 +13,25 @@ def parse_record(line):
     try:
         temp = float(temp_str)
     except ValueError:
-        raise ValueError("Температура не является числом")
+        raise ValueError("Температура должна быть числом")
 
     return city, temp, date
 
 def read_valid(lines):
     valid_records = []
     skipped_count = 0
+    
     for line in lines:
+        line_clean = line.strip()
+
+        if not line_clean:
+            continue
         try:
-            record = parse_record(line)
+            record = parse_record(line_clean)
             valid_records.append(record)
         except ValueError:
-        skipped_cound +=1
+            skipped_cound +=1
+        
     return valid_records, skipped_count
 
 def average_by_city(records):
@@ -36,7 +44,7 @@ def average_by_city(records):
 
     averages = {}
     for city in totals:
-        averages[city] = round(totals[city] / counts[city], 1)
+        averages[city] = totals[city] / counts[city]
 
     return averages
 
