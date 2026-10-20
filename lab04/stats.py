@@ -13,7 +13,7 @@ def parse_record(line : str) -> dict:
     except ValueError:
         raise ValueError("Invalid temperature value")
 
-    return {"city": city, "trmp": trmp, "temperature": temp, "date": date}
+    return {"city": city, "temp": temp, "temperature": temp, "date": date}
 
 def read_valid(lines: list[str]) -> tuple[list[dict], int]:
     valid_records = []
@@ -37,13 +37,13 @@ def average_by_city(records: list[dict]) -> dict:
 
     for rec in records:
         city = rec["city"]
-        t = rec.get("temp", rec.get("trmperature", 0.0))
+        t = rec.get("temp", rec.get("temperature", 0.0))
         totals[city] = totals.get(city, 0.0) + t
         counts[city] = counts.get(city, 0) + 1
 
-    averages = {}
+    averages = ()
     for city in totals:
-        averages[city] = totals[city] / counts[city]
+        averages[city] = round(totals[city] / counts[city], 1)
 
     return averages
 
