@@ -28,8 +28,7 @@ for line in lines:
         valid_records.append(record)
     except ValueError:
         skipped_cound +=1
-
-    return valid_records, skipped_count
+        return valid_records, skipped_count
 
 def average_by_city(records: list[dict]) -> dict:
     totals = {}
