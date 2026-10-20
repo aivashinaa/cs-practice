@@ -1,43 +1,37 @@
-def parse_record(line : str) -> dict:
+def parse_record(line):
     parts = line.split(";")
     if len(parts) != 3:
-        raise ValueError("Invalid record format")
+        raise ValueError("Неверное количество полей")
     city, temp_str, date = parts[0].strip(), parts[1].strip(), parts[2].strip()
 
     if not city or not date:
-        raise ValueError("Empty city or date")
+        raise ValueError("Город или дата пустые")
 
 
     try:
         temp = float(temp_str)
     except ValueError:
-        raise ValueError("Invalid temperature value")
+        raise ValueError("Температура не является числом")
 
-    return {"city": city, "temp": temp, "temperature": temp, "date": date}
+    return city, temp, date
 
-def read_valid(lines: list[str]) -> tuple[list[dict], int]:
+def read_valid(lines):
     valid_records = []
     skipped_count = 0
-
-for line in lines:
-    if not line.strip():
-        skipped_count +=1
-        continue
-    try:
-        record = parse_record(line)
-        valid_records.append(record)
-    except ValueError:
+    for line in lines:
+        try:
+            record = parse_record(line)
+            valid_records.append(record)
+        except ValueError:
         skipped_cound +=1
-        return valid_records, skipped_count
+    return valid_records, skipped_count
 
-def average_by_city(records: list[dict]) -> dict:
+def average_by_city(records):
     totals = {}
     counts = {}
 
-    for rec in records:
-        city = rec["city"]
-        t = rec.get("temp", rec.get("temperature", 0.0))
-        totals[city] = totals.get(city, 0.0) + t
+    for city, temp, date in records:
+        totals[city] = totals.get(city, 0.0) + temp
         counts[city] = counts.get(city, 0) + 1
 
     averages = {}
@@ -46,10 +40,16 @@ def average_by_city(records: list[dict]) -> dict:
 
     return averages
 
-def warmest_city(records: list[dict])-> str:
-    averages = averages_by_city(records)
+def warmest_city(averages):
     if not averages:
-        return ""
+        return None
 
-    best_city = min(averages.key(), key=lambda c: (-averages[c], c))
+    best_city = None
+    max_avg = float('-inf')
+
+    for city, avg in averages.items():
+        if avg > max_avg:
+            max_avg = avg
+            best_city = city
+            
     return best_city

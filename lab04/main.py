@@ -3,20 +3,18 @@ from stats import read_valid, average_by_city, warmest_city
 
 def main():
     lines = sys.stdin.read().splitlines()
-    records, skipped = read_valid(lines)
+    valid_records, skipped_count = read_valid(lines)
+    averages = averages_by_city(records)
+    warmest = warmest_city(averages)
 
-    city = warmest_city(records)
-    
 
-    if city:
-        averages = averages_by_city(records)
-        warmest_avg = round(averages[city], 1)
+    print(len(valid_records))
+    print(skipped_count)
+
+    if warmest and warmest in averages:
+        print(f"{averages[warmest]:.1f}")
     else:
-        warmest_avg = 0.0
-
-    print(len(records))
-    print(skipped)
-    print(f"{warmest_avg:.1f}")
+        print("Нет данных")
 
 if _name_ == "_main_":
     main()
