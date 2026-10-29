@@ -1,20 +1,30 @@
 import sys
-from stats import read_valid, average_by_city, warmest_city
+from stats import parse_record, read_valid, average_by_city, warmest_city
 
 def main():
     lines = sys.stdin.read().splitlines()
+
+    non_empty_lines = [line for line in lines if line.strip()]
+
+    valid_records = read_valid(lines)
+    parsed_count = len(valid_records)
+
+    skipped_count = len(non_empty_lines) - parsed_count
+
+    if parsed_count == 0:
+        print(parsed_count)
+        print(skipped_count)
+        print("0,0")
+        return
     
-    valid_records, skipped_count = read_valid(lines)
+    warmest = warmest_city(valid_records)
     averages = averages_by_city(valid_records)
-    warmest = warmest_city(averages)
+    avg_temp = averages[warmest]
 
-
-    print(len(valid_records))
+    print(parsed_count)
     print(skipped_count)
-
-    if warmest and warmest in averages:
-        print(f"{averages[warmest]:.1f}")
+    print(f"{avg_temp: .1f}")
 
 
-if _name_ == "_main_":
+if __name__ == "__main__":
     main()
