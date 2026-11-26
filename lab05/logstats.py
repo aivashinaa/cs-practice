@@ -1,8 +1,14 @@
 def parse_event(line):
     parts = line.strip().split(maxsplit=2)
-    if len(parts) < 3:
+    if not line.strip() or len(parts) < 3:
         raise ValueError("Некорректный формат строки")
+    
     time_str, level, message = parts
+    
+    valid_levels = {"DEBUG", "INFO", "WARNING", "ERROR"}
+    if level not in valid_levels:
+        raise ValueError("Неизвестный уровень")
+        
     return {
         "time": time_str,
         "level": level,
@@ -30,21 +36,22 @@ def top_errors(lines, n):
                 error_counts[msg] = error_counts.get(msg, 0) + 1
         except ValueError:
             pass
-    sorted_errors = sorted(
-        error_counts.items(), 
-        key=lambda x: (-x[1], x[0])
-    )
+    sorted_errors = sorted(error_counts.items(), key=lambda x: (-x[1], x[0]))
     return [[msg, count] for msg, count in sorted_errors[:n]]
 
 def format_report(counts, errors):
     report_lines = ["Отчёт по журналу"]
+    
     for level in sorted(counts.keys()):
         report_lines.append(f"{level}: {counts[level]}")
+        
     report_lines.append("")
     report_lines.append("Частые ошибки:")
+    
     if not errors:
-        report_lines.append("Нет доступных ошибок")
+        report_lines.append("Нет доступных ошибок") 
     else:
         for msg, count in errors:
             report_lines.append(f"- {msg} — {count}")
+            
     return "\n".join(report_lines) + "\n"
