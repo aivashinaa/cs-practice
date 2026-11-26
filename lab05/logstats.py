@@ -3,9 +3,6 @@ def parse_event(line):
     if len(parts) < 3:
         raise ValueError("Некорректный формат строки")
     time_str, level, message = parts
-    valid_levels = {"DEBUG", "INFO", "WARNING", "ERROR"}
-    if level not in valid_levels:
-        raise ValueError("Неизвестный уровень логирования")
     return {
         "time": time_str,
         "level": level,
@@ -15,8 +12,6 @@ def parse_event(line):
 def count_levels(lines):
     counts = {}
     for line in lines:
-        if not line.strip():
-            continue
         try:
             event = parse_event(line)
             level = event["level"]
@@ -28,8 +23,6 @@ def count_levels(lines):
 def top_errors(lines, n):
     error_counts = {}
     for line in lines:
-        if not line.strip():
-            continue
         try:
             event = parse_event(line)
             if event["level"] == "ERROR":
@@ -50,7 +43,7 @@ def format_report(counts, errors):
     report_lines.append("")
     report_lines.append("Частые ошибки:")
     if not errors:
-        report_lines.append("Нет ошибок")
+        report_lines.append("Нет доступных ошибок")
     else:
         for msg, count in errors:
             report_lines.append(f"- {msg} — {count}")

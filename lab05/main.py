@@ -25,8 +25,6 @@ def main():
     top_errs = top_errors(lines, 3)
 
     for line in lines:
-        if not line.strip():
-            continue
         try:
             event = parse_event(line)
             total_parsed += 1
